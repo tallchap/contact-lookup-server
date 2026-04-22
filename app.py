@@ -141,7 +141,7 @@ def update_record(record_id, content):
 def run_stage1(prompt):
     """Stage 1: Claude Opus with web search — contact lookup."""
     with anthropic_client.messages.stream(
-        model="claude-opus-4-6",
+        model="claude-opus-4-7",
         max_tokens=64000,
         thinking={"type": "enabled", "budget_tokens": 50000},
         tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 20}],
