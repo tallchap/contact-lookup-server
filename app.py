@@ -143,7 +143,8 @@ def run_stage1(prompt):
     with anthropic_client.messages.stream(
         model="claude-opus-4-7",
         max_tokens=64000,
-        thinking={"type": "enabled", "budget_tokens": 50000},
+        thinking={"type": "adaptive"},
+        output_config={"effort": "max"},
         tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 20}],
         messages=[{"role": "user", "content": prompt}],
     ) as stream:
