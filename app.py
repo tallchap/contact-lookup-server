@@ -210,7 +210,7 @@ def run_stage2(stage1_text):
 
     # Poll until complete
     response_id = initial["id"]
-    for _ in range(120):  # 10 minutes at 5s intervals
+    for _ in range(240):  # 20 minutes at 5s intervals
         poll = http_requests.get(
             f"https://api.openai.com/v1/responses/{response_id}",
             headers={"Authorization": f"Bearer {api_key}"},
@@ -227,7 +227,7 @@ def run_stage2(stage1_text):
             raise Exception(f"Deep research {data['status']}: {json.dumps(data.get('error', {}))}")
         time.sleep(5)
 
-    raise Exception("Deep research timed out after 10 minutes")
+    raise Exception("Deep research timed out after 20 minutes")
 
 
 def process_record(record_id):
