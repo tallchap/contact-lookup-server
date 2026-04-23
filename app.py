@@ -133,7 +133,7 @@ def update_record(record_id, content):
         "Authorization": f"Bearer {AIRTABLE_TOKEN}",
         "Content-Type": "application/json",
     }
-    payload = {"records": [{"id": record_id, "fields": {"Contact Info Raw": content}}]}
+    payload = {"records": [{"id": record_id, "fields": {"Email Helper - 1": content}}]}
     resp = http_requests.patch(AIRTABLE_URL, headers=headers, json=payload)
     resp.raise_for_status()
 
