@@ -24,7 +24,19 @@ anthropic_client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 jobs = {}
 
 
+def coerce_field_str(value):
+    """Airtable fields can be plain strings OR dicts/lists (e.g. AI-generated
+    fields return {'state', 'value', 'isStale'}). Coerce any of these to a
+    plain string so downstream string ops like .strip() are always safe."""
+    if isinstance(value, dict):
+        return str(value.get("value") or "")
+    if isinstance(value, list):
+        return coerce_field_str(value[0]) if value else ""
+    return str(value or "")
+
+
 def build_contact_prompt(name, reference_url):
+    reference_url = coerce_field_str(reference_url)
     url_block = ""
     if reference_url and reference_url.strip():
         url_block = f" (reference: {reference_url.strip()})"
@@ -234,13 +246,13 @@ def process_record(record_id):
     try:
         record = get_record(record_id)
         fields = record["fields"]
-        name = fields.get("Name", "")
+        name = coerce_field_str(fields.get("Name", ""))
         if not name:
             jobs[record_id]["status"] = "error"
             jobs[record_id]["error"] = "No name found"
             return
 
-        reference_url = fields.get("Person Link", "")
+        reference_url = coerce_field_str(fields.get("Person Link", ""))
         jobs[record_id]["name"] = name
         jobs[record_id]["status"] = "stage1"
         start = time.time()
